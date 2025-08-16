@@ -37,13 +37,14 @@ jobs:
           mkdir -p deploy
           cp -r ./.next/standalone/. ./deploy
           cp -r ./.next/static/. ./deploy/.next/static
-          zip release.zip ./deploy -r #3
+          cp ./.next/BUILD_ID ./deploy/.next/BUILD_ID
+          zip -r release.zip ./deploy #3
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -54,6 +55,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
+          
+      - name: Unzip artifact
+        run: unzip release.zip
       
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -63,5 +67,6 @@ jobs:
           slot-name: 'Production'
           package: ./deploy #4
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CDBF706F5D1D48C59BA578350B80093F }}
+
 
 
