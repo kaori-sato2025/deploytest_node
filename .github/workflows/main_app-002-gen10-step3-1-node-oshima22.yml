@@ -34,10 +34,10 @@ jobs:
       #2
       - name: Copy artifact for deployment job
         run: |
-          zip release.zip ./deploy -r #3
           mkdir -p deploy
           cp -r ./.next/standalone/. ./deploy
           cp -r ./.next/static/. ./deploy/.next/static
+          zip release.zip ./deploy -r #3
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -63,4 +63,5 @@ jobs:
           slot-name: 'Production'
           package: ./deploy #4
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CDBF706F5D1D48C59BA578350B80093F }}
+
 
